@@ -2,6 +2,14 @@
     "name": "sogaoh/php-framework-practice",
     "description": "PHP framework (Practice) by sogaoh.",
     "license": "AGPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Oira\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
     "require": {
         "php": "^7.3",
         "ext-intl": "^7.3",
@@ -9,10 +17,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "autoload": {
-        "files": [
-            "src/functions.php"
-        ]
     }
 }

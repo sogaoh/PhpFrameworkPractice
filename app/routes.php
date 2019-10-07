@@ -1,12 +1,12 @@
 <?php
 
-
 $routes = [];
+$template = new \Oira\TemplateFactory(__DIR__ . '/view/');
 
-$routes['/'] = function () {
-    ob_start();
-    include __DIR__ . '/../app/view/index.phtml';
-    return [200, ['Content-Type' => 'text/html'], ob_get_clean()];
+$routes['/'] = function () use ($template) {
+    return [200, ['Content-Type' => 'text/html'], $template->create('index', [
+        'name' => 'そがおー'
+    ])];
 };
 
 $routes['/phpinfo.php'] = function () {
@@ -16,14 +16,3 @@ $routes['/phpinfo.php'] = function () {
 };
 
 return $routes;
-
-/*
-$routes['/'] = function () {
-    echo "<!DOCTYPE html>\n";
-    echo "<title>test</title>\n";
-    echo "<p>現在は" . h(date('Y年m月d日H時i分s秒')) . "です</p>\n";
-    echo "<ul><li><a href='/phpinfo.php'><code>phpinfo()</code></a></ul>\n";
-    echo "<hr>\n";
-};
-*/
-
