@@ -6,47 +6,17 @@ $routes = require __DIR__ . '/../app/routes.php';
 
 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-if (isset($routes[$request_uri])) {
-    $f = $routes[$request_uri];
-    [$status, $headers, $body] = $f();
-    http_response_code($status);
-    foreach ($headers as $name => $h) {
-        header("{$name}: {$h}");
-    }
-    echo $body;
-} else {
-    http_response_code(404);
-    echo '<h1>404 Not Found</h1>';
+// after
+$not_found = function () {
+    return [404, ['Content-Type' => 'text/html'], "<h1>404 Not Found</h1>"];
+};
+
+$f = isset($routes[$request_uri]) ? $routes[$request_uri] : $not_found;
+$f = $routes[$request_uri] ?? $not_found;
+
+[$status, $headers, $body] = $f();
+http_response_code($status);
+foreach ($headers as $name => $h) {
+    header("{$name}: {$h}");
 }
-
-
-/* XXXXX
-$routes = require __DIR__ . '/../app/routes.php';
-
-if (isset($routes[$_SERVER['REQUEST_URI']])) {
-    $f = $routes[$_SERVER['REQUEST_URI']];
-    var_dump($f);
-} else {
-    http_response_code(404);
-    echo '<h1>404 Not Found</h1>';
-}
-*/
-
-/*
-if ($_SERVER['REQUEST_URI'] === '/') {
-    echo "<!DOCTYPE html>\n";
-    echo "<title>test</title>\n";
-    echo "<p>現在は" . h(date('Y年m月d日H時i分s秒')) . "です</p>\n";
-    echo "<ul><li><a href='/phpinfo.php'><code>phpinfo()</code></a></ul>\n";
-    echo "<hr>\n";
-    exit;
-}
-
-if ($_SERVER['REQUEST_URI'] === '/phpinfo.php') {
-    phpinfo();
-    exit;
-}
-
-http_response_code(404);
-echo '<h1>404 Not Found</h1>';
-*/
+echo $body;
